@@ -45,7 +45,23 @@ const comparePass = async (req, res, next) => {
   }
 };
 
+const tokenCheck = async (req, res, next) => {
+    try {
+        const token = req.header("Authorization")
+        console.log(token )
+
+        // Verify the token
+        // check the user id encoded in the token exists in the database
+        // if it doesn't exsist - throw an error
+        // continue to the controller if it does exists
+    } catch (error) {
+        res.status(501).json({ errorMessage: error.message, error: error });
+    }
+}
+
+
 module.exports = {
   hashPass,
   comparePass,
+  tokenCheck
 };
