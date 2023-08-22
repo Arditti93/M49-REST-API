@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken")
 
 const User = require("../users/model");
 
@@ -33,7 +34,7 @@ const comparePass = async (req, res, next) => {
     // if no match - respond with 500 error message "passwords do not match"
 
     if (!match) {
-      throw new Error("Passwords do not match");
+      throw new Error("Username or password do not match");
     //   res.status(500).json({ errorMessage: error.message, error: error });
     }
 
@@ -49,8 +50,17 @@ const tokenCheck = async (req, res, next) => {
     try {
         const token = req.header("Authorization")
         console.log(token )
+        const decodedToken = jwt.verify(token, process.env.SECRET)
+        console.log(decodedToken)
 
-        // Verify the token
+        const user = await User.findOne({where: {id: decodedToken.id}})
+        console.log(user)
+
+        if (!user) {
+            throw new Error("User is not authorised")
+        }
+
+        next()
         // check the user id encoded in the token exists in the database
         // if it doesn't exsist - throw an error
         // continue to the controller if it does exists
