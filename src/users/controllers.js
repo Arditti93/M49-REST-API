@@ -43,6 +43,18 @@ const getAllUsers = async (req, res) => {
 
 const login = async (req, res) => {
     try {
+        // handles persistant login
+        if (req.authUser) {
+            res.status(200).json({
+                message: "success", 
+                user:{
+                    username: req.authUser.username,
+                    email: req.authUser.email
+                }
+            })
+            return
+        }
+        // handles manual login
         const token = await jwt.sign({id: req.user.id}, process.env.SECRET)
         res.status(200).json ({
             message: "success",

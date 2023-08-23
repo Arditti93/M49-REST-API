@@ -59,8 +59,10 @@ const tokenCheck = async (req, res, next) => {
         if (!user) {
             throw new Error("User is not authorised")
         }
-
+        
+        req.authUser = user
         next()
+
         // check the user id encoded in the token exists in the database
         // if it doesn't exsist - throw an error
         // continue to the controller if it does exists
